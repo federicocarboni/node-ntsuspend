@@ -1,0 +1,32 @@
+{
+  "name": "ntsuspend",
+  "version": "0.1.0-alpha.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FedericoCarboni/node-ntsuspend.git"
+  },
+  "keywords": [
+    "windows",
+    "win32",
+    "suspend",
+    "pause",
+    "resume",
+    "process"
+  ],
+  "author": {
+    "name": "Federico Carboni",
+    "email": "fr3ddydev@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FedericoCarboni/node-ntsuspend/issues"
+  },
+  "homepage": "https://github.com/FedericoCarboni/node-ntsuspend#readme",
+  "devDependencies": {
+    "node-addon-api": "^3.0.2"
+  }
+}
