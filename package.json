@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "pwsh ./build.ps1 x64"
+    "build": "pwsh ./build.ps1 x64",
+    "build:ia32": "pwsh ./build.ps1 ia32"
   },
   "engines": {
     "node": ">=10"
