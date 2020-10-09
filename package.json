@@ -4,6 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "pwsh ./build.ps1 x64"
+  },
+  "engines": {
+    "node": ">=10"
   },
   "repository": {
     "type": "git",
