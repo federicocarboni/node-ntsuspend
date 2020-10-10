@@ -2,7 +2,13 @@
   "name": "ntsuspend",
   "version": "0.1.0-alpha.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib.js",
+  "exports": {
+    "node": {
+      "require": "./lib.js",
+      "import": "./lib.mjs"
+    }
+  },
   "scripts": {
     "build": "pwsh ./build.ps1 x64",
     "build:ia32": "pwsh ./build.ps1 ia32"
