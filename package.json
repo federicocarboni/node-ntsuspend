@@ -10,7 +10,8 @@
     }
   },
   "scripts": {
-    "build": "pwsh ./build.ps1 x64",
+    "build": "pwsh ./build.ps1 x64 ia32",
+    "build:x64": "pwsh ./build.ps1 x64",
     "build:ia32": "pwsh ./build.ps1 ia32",
     "test": "mocha test/**/*.test.{js,mjs}"
   },
