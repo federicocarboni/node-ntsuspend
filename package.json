@@ -11,7 +11,8 @@
   },
   "scripts": {
     "build": "pwsh ./build.ps1 x64",
-    "build:ia32": "pwsh ./build.ps1 ia32"
+    "build:ia32": "pwsh ./build.ps1 ia32",
+    "test": "mocha test/**/*.test.{js,mjs}"
   },
   "engines": {
     "node": ">=10"
