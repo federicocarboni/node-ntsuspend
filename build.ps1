@@ -9,17 +9,18 @@ if (!(Get-Command node-gyp -ErrorAction SilentlyContinue)) {
 }
 
 # The first argument is the target architecture
-$arch = $args[0]
-$dest = "win32-${arch}_lib.node"
+foreach ($arch in $args) {
+  $dest = "win32-${arch}_lib.node"
 
-# Remove any files from previous builds
-Remove-Item -Recurse -Force './build' -ErrorAction SilentlyContinue
-Remove-Item -Force $dest -ErrorAction SilentlyContinue
+  # Remove any files from previous builds
+  Remove-Item -Recurse -Force './build' -ErrorAction SilentlyContinue
+  Remove-Item -Force $dest -ErrorAction SilentlyContinue
 
-# Run node-gyp to build the node addon
-& node-gyp --platform=win32 "--arch=${arch}" configure build
+  # Run node-gyp to build the node addon
+  & node-gyp --platform=win32 "--arch=${arch}" configure build
 
-# Move the file to its destination
-Move-Item -Force './build/Release/lib.node' $dest
-# Remove the build folder
-Remove-Item -Recurse -Force './build' -ErrorAction SilentlyContinue
+  # Move the file to its destination
+  Move-Item -Force './build/Release/lib.node' $dest
+  # Remove the build folder
+  Remove-Item -Recurse -Force './build' -ErrorAction SilentlyContinue
+}
