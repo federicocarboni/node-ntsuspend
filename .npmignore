@@ -1,0 +1,11 @@
+.github/
+.gitignore
+
+.vscode/
+.editorconfig
+
+build/
+binding.gyp
+
+test/
+src/
