@@ -4,7 +4,7 @@ Uses `NtSuspendProcess()` and `NtResumeProcess()`.
 
 TypeScript declarations are included.
 
-Feel free to ask anything by opening an issue on the GitHub repo.
+Feel free to ask anything by opening an issue on GitHub.
 
 **Only NodeJS 10.x or higher is officially supported**
 
