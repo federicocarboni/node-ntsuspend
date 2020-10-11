@@ -38,5 +38,5 @@ const install = async () => {
   response.pipe(fs.createWriteStream(dest));
 };
 
-if (process.platform === 'win32' && (process.arch === 'x64' || process.arch === 'ia32'))
+if (!process.env.SKIP_NTSUSPEND_BINARY && process.platform === 'win32' && (process.arch === 'x64' || process.arch === 'ia32'))
   install();
