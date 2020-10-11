@@ -6,6 +6,7 @@
 
 build/
 binding.gyp
+build.ps1
 
 test/
 src/
