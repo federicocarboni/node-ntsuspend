@@ -10,6 +10,7 @@
       "import": "./lib.mjs"
     }
   },
+  "os": ["win32"],
   "scripts": {
     "install": "node install.js",
     "build": "pwsh ./build.ps1 x64 ia32",
