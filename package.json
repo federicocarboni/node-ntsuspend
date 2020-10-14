@@ -10,6 +10,7 @@
       "import": "./lib.mjs"
     }
   },
+  "cpu": ["x64", "ia32"],
   "os": ["win32"],
   "scripts": {
     "install": "node install.js",
