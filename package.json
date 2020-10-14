@@ -1,7 +1,7 @@
 {
   "name": "ntsuspend",
   "version": "0.1.1-alpha.0",
-  "description": "",
+  "description": "Suspend and resume processes on Windows",
   "main": "lib.js",
   "types": "lib.d.ts",
   "exports": {
