@@ -2,7 +2,7 @@
 Suspend and resume processes on Windows using `NtSuspendProcess()` and
 `NtResumeProcess()`.
 
-This project includes TypeScript declarations as well.
+This project includes TypeScript declarations.
 
 Feel free to ask anything by opening an issue on GitHub.
 
