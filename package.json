@@ -18,7 +18,7 @@
     "win32"
   ],
   "scripts": {
-    "install": "node install.js",
+    "install": "node --unhandled-rejections=strict ./install.cjs",
     "build": "pwsh ./build.ps1 x64 ia32",
     "build:x64": "pwsh ./build.ps1 x64",
     "build:ia32": "pwsh ./build.ps1 ia32",

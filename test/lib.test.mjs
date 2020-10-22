@@ -5,7 +5,7 @@ import { strictEqual } from 'assert';
 
 import * as esm from '../lib.mjs';
 
-const cjs = createRequire(import.meta.url)('../lib.js');
+const cjs = createRequire(import.meta.url)('../lib.cjs');
 
 const isWin32 = process.platform === 'win32';
 
