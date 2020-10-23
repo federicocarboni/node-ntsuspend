@@ -1,11 +1,5 @@
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build/
+/node_modules/
+/build/
+/*.node
 
-# Dependency directories
-node_modules/
-
-# Visual Studio Code configuration
-.vscode/
-
-# Compiled addon
-*.node
+/.vscode/
