@@ -2,11 +2,11 @@
   "name": "ntsuspend",
   "version": "0.1.1-alpha.0",
   "description": "Suspend and resume processes on Windows",
-  "main": "lib.js",
+  "main": "lib.cjs",
   "types": "lib.d.ts",
   "exports": {
     "node": {
-      "require": "./lib.js",
+      "require": "./lib.cjs",
       "import": "./lib.mjs"
     }
   },
