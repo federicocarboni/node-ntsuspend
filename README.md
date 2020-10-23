@@ -1,15 +1,13 @@
 # NtSuspend
 Suspend and resume processes on Windows using `NtSuspendProcess()` and
-`NtResumeProcess()`.
+`NtResumeProcess()`. This is a Node.js only module, it won't run in any
+browser or other JavaScript environments.
 
 This project includes TypeScript declarations.
 
 Feel free to ask anything by opening an issue on GitHub.
 
-**Note:** Make sure to use this package as an optional dependency if you want to
-support multiple operating systems.
-
-**Only NodeJS 10.x or higher is officially supported**
+**Only NodeJS 10.x or higher is supported**
 
 ## Install
 Install the library from NPM:
@@ -26,6 +24,36 @@ import { suspend, resume } from 'ntsuspend';
 ```
 ```ts
 const { suspend, resume } = require('ntsuspend');
+```
+
+**Note:** Make sure to use this package as an optional dependency if you want to
+support multiple operating systems. Optional imports in ESM can be achieved with
+top-level `await`, still unavailable in LTS releases, and dynamic `import` or by
+using [`createRequire()`](https://nodejs.org/dist/latest-v12.x/docs/api/modules.html#modules_module_createrequire_filename).
+
+```ts
+if (process.platform === 'win32') {
+  const ntsuspend = await import('ntsuspend');
+  // ... use ntsuspend
+}
+```
+
+```ts
+import { createRequire } from 'module';
+
+if (process.platform === 'win32') {
+  const ntsuspend = createRequire(import.meta.url)('ntsuspend');
+  // ... use ntsuspend
+}
+```
+
+In CommonJS `require()` can already be used conditionally.
+
+```ts
+if (process.platform === 'win32') {
+  const ntsuspend = require('ntsuspend');
+  // ... use ntsuspend
+}
 ```
 
 ## Usage
