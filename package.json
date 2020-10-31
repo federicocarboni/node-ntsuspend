@@ -48,6 +48,12 @@
     "url": "https://github.com/FedericoCarboni/node-ntsuspend/issues"
   },
   "homepage": "https://github.com/FedericoCarboni/node-ntsuspend#readme",
+  "files": [
+    "/install.cjs",
+    "/lib.cjs",
+    "/lib.mjs",
+    "/lib.d.ts"
+  ],
   "devDependencies": {
     "mocha": "^8.1.3",
     "node-addon-api": "^3.0.2"
