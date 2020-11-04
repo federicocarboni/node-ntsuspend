@@ -1,51 +1,48 @@
 #include <windows.h>
 #include <napi.h>
 
-// check if the given status is success, see ntdef.h
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
 
-// define the signature for NtSuspendProcess and NtResumeProcess
 typedef NTSTATUS (NTAPI *pNtSuspendProcess)(IN HANDLE ProcessHandle);
 
-static pNtSuspendProcess NtSuspendProcess;
-static pNtSuspendProcess NtResumeProcess;
+static pNtSuspendProcess nt_suspend_process;
+static pNtSuspendProcess nt_resume_process;
 
-// suspends or resumes the given process
-static inline Napi::Boolean SuspendResumeProcess(const Napi::CallbackInfo& info, pNtSuspendProcess suspendOrResume) {
+static inline bool ntsuspend(const Napi::CallbackInfo& info, pNtSuspendProcess nt_fn) {
   if (!info[0].IsNumber()) {
-    return Napi::Boolean::New(info.Env(), false);
+    return false;
   }
-  const DWORD pid = info[0].ToNumber().Int64Value();
-  // get a handle to the process with access for suspending and resuming
-  const HANDLE hProcess = OpenProcess(PROCESS_SUSPEND_RESUME, FALSE, pid);
-  // if `OpenProcess()` failed, return false
-  if (hProcess == NULL) {
-    return Napi::Boolean::New(info.Env(), false);
+  const long process_id = info[0].ToNumber().Int64Value();
+  if (process_id < 0) {
+    return false;
   }
-  const NTSTATUS status = suspendOrResume(hProcess);
-  CloseHandle(hProcess);
-  return Napi::Boolean::New(info.Env(), NT_SUCCESS(status));
+  const HANDLE process_handle = OpenProcess(PROCESS_SUSPEND_RESUME, FALSE, (DWORD)process_id);
+  if (process_handle == NULL) {
+    return false;
+  }
+  const NTSTATUS status = nt_fn(process_handle);
+  CloseHandle(process_handle);
+  return NT_SUCCESS(status);
 }
 
-static Napi::Boolean Suspend(const Napi::CallbackInfo& info) {
-  return SuspendResumeProcess(info, NtSuspendProcess);
+#define JS_BOOL(info, value) (Napi::Boolean::New(info.Env(), ((bool)(value))))
+
+static inline Napi::Boolean suspend(const Napi::CallbackInfo& info) {
+  return JS_BOOL(info, ntsuspend(info, nt_suspend_process));
 }
 
-static Napi::Boolean Resume(const Napi::CallbackInfo& info) {
-  return SuspendResumeProcess(info, NtResumeProcess);
+static inline Napi::Boolean resume(const Napi::CallbackInfo& info) {
+  return JS_BOOL(info, ntsuspend(info, nt_resume_process));
 }
 
-static Napi::Object Init(Napi::Env env, Napi::Object exports) {
-  // get a handle to NTDLL
+static Napi::Object init(Napi::Env env, Napi::Object exports) {
   const HMODULE ntdll = GetModuleHandle("ntdll");
-  // get the functions `NtSuspendProcess()` and `NtResumeProcess()`
-  NtSuspendProcess = (pNtSuspendProcess)GetProcAddress(ntdll, "NtSuspendProcess");
-  NtResumeProcess = (pNtSuspendProcess)GetProcAddress(ntdll, "NtResumeProcess");
-  // export `Suspend()` and `Resume()` as JavaScript functions
-  exports.Set("suspend", Napi::Function::New(env, Suspend));
-  exports.Set("resume", Napi::Function::New(env, Resume));
+  nt_suspend_process = (pNtSuspendProcess)GetProcAddress(ntdll, "NtSuspendProcess");
+  nt_resume_process = (pNtSuspendProcess)GetProcAddress(ntdll, "NtResumeProcess");
+
+  exports.Set("suspend", Napi::Function::New(env, suspend));
+  exports.Set("resume", Napi::Function::New(env, resume));
   return exports;
 }
 
-// initialize Node.js addon
-NODE_API_MODULE(NODE_GYP_MODULE_NAME, Init)
+NODE_API_MODULE(NODE_GYP_MODULE_NAME, init)
