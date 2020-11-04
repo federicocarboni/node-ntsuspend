@@ -1,5 +1,5 @@
 if (!$IsWindows) {
-  Write-Host "skipped"
+  Write-Host "node addon build skipped on non-win32 environment"
   exit
 }
 
