@@ -37,27 +37,27 @@ for (const func of ['suspend', 'resume']) {
 }
 
 (isWin32 ? describe : describe.skip)('suspend() & resume()', function () {
-  let spawned;
-  this.beforeEach(() => {
-    spawned = spawn(process.argv0, ['test/process.js'], { stdio: 'pipe' });
+  let childProcess;
+  this.beforeEach(function () {
+    childProcess = spawn(process.argv0, ['test/process.js'], { stdio: 'pipe' });
   });
-  this.afterEach(() => {
-    if (spawned.exitCode === null || spawned.exitCode === void 0)
-      spawned.kill();
-    spawned = null;
+  this.afterEach(function () {
+    if (childProcess.exitCode === null || childProcess.exitCode === void 0)
+      childProcess.kill();
+    childProcess = null;
   });
   it('suspends and resumes a running process', async function () {
     let suspended = false;
     let k = 0;
-    for await (const line of readlines(spawned.stdout)) {
+    for await (const line of readlines(childProcess.stdout)) {
       strictEqual(suspended, false, 'child process wrote to stdout while it should have been paused');
       strictEqual(parseInt(line), k++, 'child process out of sync');
       if (k === 2) {
         setTimeout(() => {
-          strictEqual(esm.resume(spawned.pid), true, 'resume returned false');
+          strictEqual(esm.resume(childProcess.pid), true, 'resume returned false');
           suspended = false;
         }, 80);
-        strictEqual(esm.suspend(spawned.pid), true, 'suspend returned false');
+        strictEqual(esm.suspend(childProcess.pid), true, 'suspend returned false');
         suspended = true;
       } else if (k === 3) return;
     }
