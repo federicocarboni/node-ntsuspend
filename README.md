@@ -68,3 +68,8 @@ if (!resume(pid))
 ```
 
 **Note:** If you're not on Windows `suspend()` and `resume()` will be `undefined`.
+
+## Disclaimer
+This library uses `NtSuspendProcess()` and `NtResumeProcess()` from `NTDLL`, these functions are not
+officially documented on MSDN; they have been consistently available since Windows XP, but are not
+guaranteed to work in the future.
