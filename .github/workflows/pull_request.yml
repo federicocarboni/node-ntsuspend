@@ -1,0 +1,19 @@
+name: Test Pull Request
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: windows-latest
+    - uses: actions/checkout@v2
+    - uses: microsoft/setup-msbuild@v1.0.2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+    - run: npm ci
+      env:
+        SKIP_NTSUSPEND_BINARY: 'true'
+    - run: npm run build
+    - run: npm test
