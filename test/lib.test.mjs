@@ -50,8 +50,8 @@ for (const func of ['suspend', 'resume']) {
     let suspended = false;
     let k = 0;
     for await (const line of readlines(spawned.stdout)) {
-      strictEqual(suspended, false, 'stdout ');
-      strictEqual(parseInt(line), k++);
+      strictEqual(suspended, false, 'child process wrote to stdout while it should have been paused');
+      strictEqual(parseInt(line), k++, 'child process out of sync');
       if (k === 2) {
         setTimeout(() => {
           strictEqual(esm.resume(spawned.pid), true, 'resume returned false');
