@@ -1,44 +1,46 @@
 #include <windows.h>
 #include <napi.h>
 
+#include <math.h>
+
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
 
 typedef NTSTATUS (NTAPI *pNtSuspendProcess)(IN HANDLE ProcessHandle);
 
-static pNtSuspendProcess nt_suspend_process;
-static pNtSuspendProcess nt_resume_process;
+static pNtSuspendProcess NtSuspendProcess;
+static pNtSuspendProcess NtResumeProcess;
 
-static inline bool ntsuspend(const Napi::CallbackInfo& info, pNtSuspendProcess nt_fn) {
-  if (!info[0].IsNumber()) {
+static inline bool ntsuspend(const Napi::Value pid, pNtSuspendProcess suspend_or_resume) {
+  if (!pid.IsNumber()) {
     return false;
   }
-  const long process_id = info[0].ToNumber().Int64Value();
-  if (process_id < 0) {
+  const auto number_pid = pid.ToNumber();
+  const auto double_pid = number_pid.DoubleValue();
+  const DWORD dword_pid = number_pid.Uint32Value();
+  if (isnan(double_pid) || !isfinite(double_pid) || (double) dword_pid != double_pid) {
     return false;
   }
-  const HANDLE process_handle = OpenProcess(PROCESS_SUSPEND_RESUME, FALSE, (DWORD)process_id);
+  const HANDLE process_handle = OpenProcess(PROCESS_SUSPEND_RESUME, FALSE, dword_pid);
   if (process_handle == NULL) {
     return false;
   }
-  const NTSTATUS status = nt_fn(process_handle);
+  const NTSTATUS status = suspend_or_resume(process_handle);
   CloseHandle(process_handle);
   return NT_SUCCESS(status);
 }
 
-#define JS_BOOL(info, value) (Napi::Boolean::New(info.Env(), ((bool)(value))))
-
 static inline Napi::Boolean suspend(const Napi::CallbackInfo& info) {
-  return JS_BOOL(info, ntsuspend(info, nt_suspend_process));
+  return Napi::Boolean::New(info.Env(), ntsuspend(info[0], NtSuspendProcess));
 }
 
 static inline Napi::Boolean resume(const Napi::CallbackInfo& info) {
-  return JS_BOOL(info, ntsuspend(info, nt_resume_process));
+  return Napi::Boolean::New(info.Env(), ntsuspend(info[0], NtResumeProcess));
 }
 
 static Napi::Object init(Napi::Env env, Napi::Object exports) {
   const HMODULE ntdll = GetModuleHandle("ntdll");
-  nt_suspend_process = (pNtSuspendProcess)GetProcAddress(ntdll, "NtSuspendProcess");
-  nt_resume_process = (pNtSuspendProcess)GetProcAddress(ntdll, "NtResumeProcess");
+  NtSuspendProcess = (pNtSuspendProcess)GetProcAddress(ntdll, "NtSuspendProcess");
+  NtResumeProcess = (pNtSuspendProcess)GetProcAddress(ntdll, "NtResumeProcess");
 
   exports.Set("suspend", Napi::Function::New(env, suspend));
   exports.Set("resume", Napi::Function::New(env, resume));

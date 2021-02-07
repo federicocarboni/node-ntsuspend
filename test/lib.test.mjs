@@ -32,6 +32,19 @@ for (const func of ['suspend', 'resume']) {
       strictEqual(esm[func](true), false);
       strictEqual(esm[func](Symbol()), false);
       strictEqual(esm[func]({ key: 'value' }), false);
+      strictEqual(esm[func](), false);
+    });
+    (isWin32 ? it : it.skip)('returns false on NaN process id', function () {
+      strictEqual(esm[func](NaN), false);
+    });
+    (isWin32 ? it : it.skip)('returns false on Infinity process id', function () {
+      strictEqual(esm[func](Infinity), false);
+    });
+    (isWin32 ? it : it.skip)('returns false on -Infinity process id', function () {
+      strictEqual(esm[func](-Infinity), false);
+    });
+    (isWin32 ? it : it.skip)('returns false on float process id', function () {
+      strictEqual(esm[func](2.5), false);
     });
   });
 }
