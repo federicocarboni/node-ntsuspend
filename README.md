@@ -10,15 +10,14 @@ Feel free to ask anything by opening an issue on GitHub.
 **Only NodeJS 10.x or higher is supported**
 
 ## Install
-Install the library from NPM:
+The library can be installed from NPM or from GitHub:
 
 `npm i ntsuspend`
-
-or from GitHub:
 
 `npm i FedericoCarboni/node-ntsuspend`
 
 To use it in your project you can `import` or `require()` it.
+
 ```ts
 import { suspend, resume } from 'ntsuspend';
 ```
@@ -65,6 +64,14 @@ if (!suspend(pid))
   console.log('Could not suspend process');
 if (!resume(pid))
   console.log('Could not resume process');
+```
+
+If you are using Node.js' child processes the process id can be obtained by using [`subprocess.pid`](https://nodejs.org/api/child_process.html#child_process_subprocess_pid).
+
+```ts
+const subprocess = spawn('executable');
+if (!suspend(subprocess.pid))
+  console.log('Could not suspend process');
 ```
 
 **Note:** If you're not on Windows `suspend()` and `resume()` will be `undefined`.
