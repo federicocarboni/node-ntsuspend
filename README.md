@@ -67,6 +67,8 @@ if (!resume(pid))
 ```
 
 If you are using Node.js' child processes the process id can be obtained by using [`subprocess.pid`](https://nodejs.org/api/child_process.html#child_process_subprocess_pid).
+**Note:** make sure that you're passing the actual process id to ntsuspend; the `ChildProcess` instance returned by `child_process.exec` is a handle to the shell not to the actual subprocess. Use `child_process.spawn` and make sure that the `shell` option is disabled.
+See [#3](https://github.com/FedericoCarboni/node-ntsuspend/issues/3).
 
 ```ts
 const subprocess = spawn('executable');
